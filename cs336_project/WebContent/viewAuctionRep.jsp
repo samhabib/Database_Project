@@ -17,18 +17,8 @@
 </div>
 <!-- Navigation Bar code -->
 <div align= center class = "navigation">
-<a href = "main_index.jsp">HOME</a>
-<% 
-	if(session.getAttribute("user") == null){
-%>
-<a href = "registerOrLogin.jsp">Sign up or Sign in</a>
-<%} else{
-%>
+<a href = "repPage.jsp">Customer Representative Page</a>
 <a href = "logOut.jsp">Log Out</a>
-<%}%>
-<a href = "searchBrowse.jsp">Search & Browse</a>
-<a href = "createAuction.jsp">Create an Auction</a>
-<a href = "messageBoardUser.jsp">Go to Question Board</a>
 </div>
 
 <br>
@@ -97,27 +87,6 @@
 				bidAmount = rs3.getFloat("bidAmount");
 				out.println(String.format("<b>%s</b> is currently winning the auction with a bid of <b>$%.2f</b><br>", bidderName, bidAmount));
 			}
-			
-			if (!(username.equals((String)session.getAttribute("user")))) {
-			out.println(String.format("Enter <b>$%.2f</b> or more in order to bid!", (bidAmount + .01)));%>
-			<form method="post" action="submitBid.jsp">
-			<table>
-				<tbody>
-					<tr>
-						<td>Bid Amount</td>
-						<td><input type="text" name="bidAmount"></td>
-					</tr>
-				</tbody>
-			</table>
-				<br>
-				<input type="hidden" name="auctionID" value="<%out.println(auctionID);%>">
-				<input type="submit" value="Bid!">
-			</form>
-			<form method="post" action="createAutobidder.jsp">
-				<input type="hidden" name="auctionID" value="<%out.println(auctionID);%>">
-				<input type="submit" value="Set up Autobidder">
-			</form>
-		<% }
 		} else {
 			out.println("<b>" + username + "</b> sold this item<br>");
 			out.println("This auction ended on " + finishDateTime + "<br>");
@@ -137,14 +106,30 @@
 			}
 		}
 		
+		
+		%>
+		<form method="post" action="deleteAuction.jsp">
+		<input type = "hidden" name = auctionID value = <%out.print(auctionID);%>>
+		<input type="submit" name = auctionID value ="Delete Auction">
+		</form>
+		<br>
+		<form method="post" action="deleteTopBid.jsp">
+		<td>Bid ID of bid you want to Delete<input type="text" name="bidID"></td>
+		<input type = "hidden" name = topBid value = <%out.print(itemID);%>>
+		<input type = "hidden" name = auctionID value = <%out.print(auctionID);%>>
+		<input type="submit" name = "topBid" value = "Delete Bid">
+		</form>
+		
+		<%
 		out.println(String.format("<br>History of Bids:<br> "));
         out.println(String.format("----------------------- <br>"));
 
-        ResultSet rsSam = stmt.executeQuery("SELECT Bid.bidAmount, Bid.bidderName FROM Bid WHERE (Bid.bidAuction = '" + auctionID + "');");
+        ResultSet rsSam = stmt.executeQuery("SELECT Bid.bidAmount, Bid.bidderName, Bid.bidID FROM Bid WHERE (Bid.bidAuction = '" + auctionID + "');");
         while(rsSam.next()!=false){
             String SamAmount = rsSam.getString(1);
             String SamName = rsSam.getString(2);
-            out.println("Person: " + SamName +" bid  $" + SamAmount +"   on this auction" + "<br />"+ "<br />");
+            String SamBid = rsSam.getString(3);
+            out.println("Person: " + SamName +" bid  $" + SamAmount +"   on this auction. Bid ID is: " + SamBid + "<br />"+ "<br />");
         }
 	} catch (Exception ex) {
 		out.print(ex);

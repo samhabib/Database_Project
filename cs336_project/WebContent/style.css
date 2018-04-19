@@ -1,0 +1,28 @@
+.banner{
+	background-color: black;
+	color:white;
+}
+.navigation {
+	border: 3px solid #ddd;
+    background-color: black;
+    overflow: hidden;
+}
+.navigation a{
+	background-color:#ddd;
+	color:black;
+	padding:14px 16px;
+	font-size: 17px;
+	text-decoration:none;
+}
+
+
+table{
+	border-collapse: collapse;
+	width: 100%;
+	text-align:left;
+	padding: 10px;
+}
+th, td {
+	border-bottom: 1px solid #ddd;
+	text-align:left;
+	padding: 10px;
